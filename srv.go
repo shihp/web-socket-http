@@ -86,14 +86,14 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatalf("read all err %s", err)
+		log.Printf("read all err %s", err)
 	}
 
 	fmt.Println(string(body))
 
 	callId, err := jsonparser.GetString(body, "content", "[0]", "callId")
 	if err != nil {
-		log.Fatalf("jsonparser GetString %s", err)
+		log.Printf("format %s", err)
 	}
 	fmt.Println(callId)
 
@@ -103,7 +103,7 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 	rsJson, err2 := json.Marshal(rs)
 	if err2 != nil {
-		log.Fatalf("format %s", err2)
+		log.Printf("format %s", err2)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(rsJson)
