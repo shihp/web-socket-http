@@ -123,7 +123,7 @@ func main() {
 	http.Handle("/", websocket.Handler(Echo))
 	http.Handle("/login", websocket.Handler(Login))
 	http.HandleFunc("/Upload", Upload)
-	http.HandleFunc("/Callback", Callback)
+	http.HandleFunc("/sobot/message", Callback)
 	if err := http.ListenAndServe(":8989", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
