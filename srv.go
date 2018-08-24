@@ -8,9 +8,16 @@ import (
 	"strings"
 	"io/ioutil"
 	"github.com/buger/jsonparser"
+	"encoding/json"
 )
 
 var conns = make(map[string]*websocket.Conn)
+
+type Response struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
 
 func Echo(ws *websocket.Conn) {
 	println("连接头: %s", ws)
@@ -90,6 +97,17 @@ func Callback(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(callId)
 
+	rs := Response{
+		Code:    0,
+		Message: "success",
+	}
+	rsJson, err2 := json.Marshal(rs)
+	if err2 != nil {
+		log.Fatalf("format %s", err2)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(rsJson)
+
 	//var err error
 	//msg := "ok"
 	//if err = websocket.Message.Send(conns["9873"], msg); err != nil {
@@ -106,7 +124,7 @@ func main() {
 	http.Handle("/login", websocket.Handler(Login))
 	http.HandleFunc("/Upload", Upload)
 	http.HandleFunc("/Callback", Callback)
-	if err := http.ListenAndServe(":1234", nil); err != nil {
+	if err := http.ListenAndServe(":8989", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
 }
